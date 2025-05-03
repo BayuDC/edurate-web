@@ -7,7 +7,7 @@ import 'animate.css';
     <Head>
       <Title>Edurate</Title>
     </Head>
-    <Body>
+    <Body data-theme="night">
       <NuxtPage />
     </Body>
   </Html>
