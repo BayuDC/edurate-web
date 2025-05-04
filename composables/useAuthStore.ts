@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
     const token = localStorage.getItem('token');
     if (!token) {
       user.value = null;
-      return;
+      return false;
     }
     try {
       loading.value = true;
@@ -25,9 +25,10 @@ export const useAuthStore = defineStore('auth', () => {
       });
 
       user.value = data;
+      return true;
     } catch (error) {
-      console.log(error);
       user.value = null;
+      return false;
     } finally {
       loading.value = false;
     }
