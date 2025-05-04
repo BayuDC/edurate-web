@@ -9,4 +9,7 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/app.css'],
   modules: ['@vueuse/nuxt', '@pinia/nuxt'],
+  routeRules: {
+    '/**': { ssr: false },
+  },
 });

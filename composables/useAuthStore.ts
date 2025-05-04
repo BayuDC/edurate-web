@@ -9,7 +9,30 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null);
   const loading = ref(false);
 
-  function sync() {}
+  async function sync() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      user.value = null;
+      return;
+    }
+    try {
+      loading.value = true;
+      const data = await $fetch<User>('/auth/me', {
+        baseURL: 'https://handsome-traci-bayudc-6b35ca09.koyeb.app',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      user.value = data;
+    } catch (error) {
+      console.log(error);
+      user.value = null;
+    } finally {
+      loading.value = false;
+    }
+  }
+
   async function login(username: string, password: string) {
     try {
       loading.value = true;
