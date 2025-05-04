@@ -1,15 +1,20 @@
 <script setup lang="ts">
 const auth = useAuthStore();
+const alert = useAlertStore();
 
 const username = ref('');
 const password = ref('');
 
 async function onSubmit() {
-  if (auth.loading.value) return;
+  if (auth.loading) return;
 
+  alert.hide();
   if (await auth.login(username.value, password.value)) {
-    navigateTo('/');
+    return navigateTo('/');
   }
+
+  console.log('Login failed');
+  alert.show('Login failed. Please check your username and password!');
 }
 </script>
 
@@ -30,9 +35,9 @@ async function onSubmit() {
             <input v-model="password" type="password" class="input w-full" placeholder="Enter password.." />
           </fieldset>
           <div><a class="link link-hover">Forgot password?</a></div>
-          <button class="btn btn-primary mt-4" :class="{ 'btn-soft': auth.loading.value }" type="submit">
-            <span v-if="auth.loading.value" class="loading loading-spinner"></span>
-            Login
+          <button class="btn btn-primary mt-4" :class="{ 'btn-soft': auth.loading }" type="submit">
+            <span v-if="auth.loading" class="loading loading-dots"></span>
+            <span v-else>Login</span>
           </button>
         </form>
       </div>

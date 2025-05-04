@@ -5,7 +5,7 @@ interface User {
   role: 'admin' | 'teacher' | 'student';
 }
 
-export default function useAuthStore() {
+export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null);
   const loading = ref(false);
 
@@ -30,4 +30,4 @@ export default function useAuthStore() {
   function logout() {}
 
   return { user, sync, login, logout, loading };
-}
+});

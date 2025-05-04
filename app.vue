@@ -7,8 +7,10 @@ import 'animate.css';
     <Head>
       <Title>Edurate</Title>
     </Head>
-    <Body data-theme="night">
-      <NuxtPage />
+    <Body data-theme="night" class="overflow-hidden">
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
     </Body>
   </Html>
 </template>
