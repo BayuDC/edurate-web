@@ -1,4 +1,36 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const auth = useAuthStore();
+
+const menus = computed(() => {
+  switch (auth.user?.role) {
+    case 'admin':
+      return [
+        { name: 'Dashboard', path: '/admin/dashboard' },
+        { name: 'Manage User', path: '/admin/users' },
+        { name: 'Manage Class', path: '/admin/classes' },
+        { name: 'Manage Course', path: '/admin/courses' },
+        { name: 'Academic Periods', path: '/admin/periods' },
+        { name: 'Activity Log', path: '/admin/log' },
+        { name: 'Profile', path: '/admin/profile' },
+      ];
+    case 'teacher':
+      return [
+        { name: 'Dashboard', path: '/lecturer/dashboard' },
+        { name: 'My Classes', path: '/lectures/my-classes' },
+        { name: 'Survey Result', path: '/lectures/survey-result' },
+        { name: 'Profile', path: '/lecturer/profile' },
+      ];
+    case 'student':
+      return [
+        { name: 'My Surveys', path: '/student/my-surveys' },
+        { name: 'History', path: '/student/history' },
+        { name: 'Profile', path: '/student/profile' },
+      ];
+    default:
+      return [];
+  }
+});
+</script>
 
 <template>
   <div>
@@ -31,8 +63,9 @@
           <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
           <ul class="menu bg-base-200 text-base-content min-h-full w-60 p-4">
             <!-- Sidebar content here -->
-            <li><a>Sidebar Item 1</a></li>
-            <li><a>Sidebar Item 2</a></li>
+            <li v-for="menu in menus" class="text-base font-semibold mb-2" :key="menu.path">
+              <NuxtLink :to="menu.path">{{ menu.name }}</NuxtLink>
+            </li>
           </ul>
         </div>
       </div>
