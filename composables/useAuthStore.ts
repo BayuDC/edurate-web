@@ -51,9 +51,21 @@ export const useAuthStore = defineStore('auth', () => {
       loading.value = false;
     }
   }
-  function logout() {
-    localStorage.removeItem('token');
-    user.value = null;
+  async function logout() {
+    try {
+      const token = localStorage.getItem('token');
+      await $fetch<User>('/auth/logout', {
+        baseURL: 'https://handsome-traci-bayudc-6b35ca09.koyeb.app',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: 'post',
+      });
+    } catch (e) {
+    } finally {
+      localStorage.removeItem('token');
+      user.value = null;
+    }
   }
 
   return { user, sync, login, logout, loading };
