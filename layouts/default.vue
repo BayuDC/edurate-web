@@ -33,7 +33,7 @@ const menus = computed(() => {
 
 <template>
   <div>
-    <div class="navbar bg-base-200 shadow-sm px-7 border-primary border-b-2">
+    <div class="navbar bg-base-300 shadow-sm px-7 border-primary border-b-4">
       <div class="flex-1">
         <div class="text-xl font-bold text-primary">Edurate!</div>
       </div>
@@ -53,14 +53,14 @@ const menus = computed(() => {
     <div>
       <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content flex flex-col items-center justify-center bg-neutral">
+        <div class="drawer-content flex flex-col bg-neutral p-8">
           <!-- Page content here -->
 
           <slot />
         </div>
         <div class="drawer-side">
           <label for="my-drawer-2" class="drawer-overlay"></label>
-          <ul class="menu bg-base-200 text-base-content min-h-full w-60 p-4">
+          <ul class="menu bg-base-300 text-base-content min-h-full w-60 p-4">
             <!-- Sidebar content here -->
             <li
               v-for="menu in menus"

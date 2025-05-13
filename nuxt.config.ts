@@ -12,4 +12,9 @@ export default defineNuxtConfig({
   routeRules: {
     '/**': { ssr: false },
   },
+  runtimeConfig: {
+    public: {
+      apiUrl: process.env.API_URL,
+    },
+  },
 });
