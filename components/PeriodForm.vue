@@ -1,33 +1,35 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue';
+
+const emit = defineEmits<{
+  (e: 'save'): void;
+}>();
+
+const period = usePeriodStore();
+
+function onSubmit() {
+  emit('save');
+}
 </script>
 
 <template>
-  <form action="">
+  <form action="" @submit.prevent="onSubmit">
     <div class="card bg-base-100 shrink-0 rounded-xl">
       <div class="card-body">
-        <fieldset class="fieldset">
-          <label class="label">Name</label>
-          <input type="text" class="input w-full" />
-        </fieldset>
+        <Input label="Name" v-model="period.data.name" :error="period.error.name" />
+
         <div class="flex gap-2 md:gap-4 flex-col md:flex-row">
-          <fieldset class="fieldset w-full">
-            <label class="label">Start Date</label>
-            <input type="date" class="input w-full" />
-          </fieldset>
-          <fieldset class="fieldset w-full">
-            <label class="label">End Date</label>
-            <input type="date" class="input w-full" />
-          </fieldset>
+          <Input label="Start Date" v-model="period.data.startDate" :error="period.error.startDate" type="date" />
+          <Input label="End Date" v-model="period.data.endDate" :error="period.error.endDate" type="date" />
         </div>
       </div>
     </div>
     <div class="flex justify-end gap-4">
-      <button class="btn btn-accent btn-soft mt-4">
+      <NuxtLink class="btn btn-accent btn-soft mt-4" to="/admin/periods">
         <Icon icon="mingcute:close-fill" class="text-xl" />
         Cancel
-      </button>
-      <button class="btn btn-primary mt-4">
+      </NuxtLink>
+      <button class="btn btn-primary mt-4" type="submit">
         <Icon icon="mingcute:check-fill" class="text-xl" />
         Save
       </button>
