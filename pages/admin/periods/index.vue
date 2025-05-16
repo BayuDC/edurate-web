@@ -52,11 +52,11 @@ const { data } = await useApi<{ periods: any[] }>('/periods', {
             <td>{{ p.endDate }}</td>
             <td><input type="checkbox" :checked="false" class="toggle toggle-primary" /></td>
             <td class="flex gap-2">
-              <button class="btn btn-secondary btn-sm">
+              <NuxtLink :to="`/admin/periods/${p.id}`" class="btn btn-secondary btn-sm">
                 <div class="flex items-center gap-1">
                   <Icon icon="mingcute:edit-2-fill" class="text-lg" />
                 </div>
-              </button>
+              </NuxtLink>
               <button class="btn btn-accent btn-sm">
                 <div class="flex items-center gap-1">
                   <Icon icon="mingcute:delete-2-fill" class="text-lg" />

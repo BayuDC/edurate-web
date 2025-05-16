@@ -1,4 +1,6 @@
 export const usePeriodStore = defineStore('period', () => {
+  const id = ref(0);
+
   const data = ref({
     name: '',
     startDate: '',
@@ -9,6 +11,24 @@ export const usePeriodStore = defineStore('period', () => {
     startDate: '',
     endDate: '',
   });
+
+  async function load(): Promise<void> {
+    if (!id.value) return;
+
+    const result = await useApi<{ period: any }>(() => `/periods/${id.value}`, {});
+
+    if (result.data.value) {
+      data.value.name = result.data.value.period.name;
+      data.value.startDate = result.data.value.period.startDate;
+      data.value.endDate = result.data.value.period.endDate;
+      return;
+    }
+
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Not Found',
+    });
+  }
 
   async function create(): Promise<boolean> {
     const err = await useApiCreate('/periods', toValue(data));
@@ -24,6 +44,7 @@ export const usePeriodStore = defineStore('period', () => {
   }
 
   function reset() {
+    id.value = 0;
     data.value.name = '';
     data.value.startDate = '';
     data.value.endDate = '';
@@ -32,5 +53,5 @@ export const usePeriodStore = defineStore('period', () => {
     error.value.endDate = '';
   }
 
-  return { data, error, create, reset };
+  return { id, data, error, load, create, reset };
 });
