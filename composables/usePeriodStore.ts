@@ -40,6 +40,21 @@ export const usePeriodStore = defineStore('period', () => {
       return false;
     }
 
+    error.value.name = error.value.startDate = error.value.endDate = '';
+    return true;
+  }
+
+  async function update(): Promise<boolean> {
+    const err = await useApiUpdate(`/periods/${id.value}`, toValue(data));
+
+    if (err) {
+      error.value.name = err.name;
+      error.value.startDate = err.startDate;
+      error.value.endDate = err.endDate;
+      return false;
+    }
+
+    error.value.name = error.value.startDate = error.value.endDate = '';
     return true;
   }
 
@@ -53,5 +68,5 @@ export const usePeriodStore = defineStore('period', () => {
     error.value.endDate = '';
   }
 
-  return { id, data, error, load, create, reset };
+  return { id, data, error, load, create, update, reset };
 });
