@@ -1,8 +1,9 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>
+  <div class="relative overflow-hidden">
     <slot />
+
     <Alert />
   </div>
 </template>

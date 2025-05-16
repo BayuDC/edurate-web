@@ -33,7 +33,7 @@ const menus = computed(() => {
 
 <template>
   <div>
-    <div class="navbar bg-base-300 shadow-sm px-7 border-primary border-b-4">
+    <div class="navbar bg-base-300 shadow-sm px-7 border-primary border-b-4 fixed top-0 z-50">
       <div class="flex-1">
         <div class="text-xl font-bold text-primary">Edurate!</div>
       </div>
@@ -50,15 +50,18 @@ const menus = computed(() => {
         </label>
       </div>
     </div>
-    <div>
+    <div class="">
       <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content flex flex-col bg-neutral p-8">
+        <div
+          class="drawer-content overflow-scroll flex flex-col bg-neutral p-6 md:p-8 pt-24 md:pt-24 relative h-screen"
+        >
           <!-- Page content here -->
 
           <slot />
+          <Alert left />
         </div>
-        <div class="drawer-side">
+        <div class="drawer-side pt-16">
           <label for="my-drawer-2" class="drawer-overlay"></label>
           <ul class="menu bg-base-300 text-base-content min-h-full w-60 p-4">
             <!-- Sidebar content here -->

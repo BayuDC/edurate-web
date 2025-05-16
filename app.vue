@@ -7,7 +7,7 @@ import 'animate.css';
     <Head>
       <Title>Edurate</Title>
     </Head>
-    <Body data-theme="night" class="">
+    <Body data-theme="night" class="max-h-screen">
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>

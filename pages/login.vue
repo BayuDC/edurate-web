@@ -12,12 +12,13 @@ const password = ref('');
 async function onSubmit() {
   if (auth.loading) return;
 
-  alert.hide();
   if (await auth.login(username.value, password.value)) {
-    return navigateTo('/');
+    alert.show('Login successful!', 'success');
+    navigateTo('/');
+
+    return;
   }
 
-  console.log('Login failed');
   alert.show('Login failed. Please check your username and password!');
 }
 </script>

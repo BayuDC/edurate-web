@@ -3,6 +3,7 @@ definePageMeta({
   middleware: ['auth'],
 });
 
+const alert = useAlertStore();
 const period = usePeriodStore();
 
 async function onSave() {

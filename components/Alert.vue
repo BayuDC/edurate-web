@@ -1,33 +1,38 @@
 <script setup lang="ts">
+import { Icon } from '@iconify/vue';
+
+const props = defineProps<{
+  left?: boolean;
+}>();
+
 const alert = useAlertStore();
 
-function onAnimationEnd() {
-  if (alert.animation == 'backInUp') return;
-
-  alert.message = '';
-  alert.render = false;
-}
+onUnmounted(() => {
+  alert.reset();
+});
 </script>
 
 <template>
   <div>
-    <div v-if="alert.render" class="max-w-[30rem] w-full absolute bottom-6 left-[50%] translate-x-[-50%] px-4 mx-auto">
-      <Animate :name="alert.animation" @animationend="onAnimationEnd">
-        <div role="alert" class="alert alert-error alert-soft">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 shrink-0 stroke-current"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>{{ alert.message }}</span>
+    <div
+      v-for="m in alert.messages"
+      :class="[left ? 'md:translate-x-0 md:left-4 left-[50%] translate-x-[-50%]' : 'left-[50%] translate-x-[-50%]']"
+      class="md:max-w-[30rem] w-full absolute bottom-10 px-4 mx-auto flex flex-col gap-4"
+    >
+      <Animate :name="m.active ? 'fadeInUp' : 'fadeOut'" :duration="300" class="">
+        <div
+          role="alert"
+          class="alert alert-soft gap-2"
+          :class="{
+            'alert-error': m.type == 'error',
+            'alert-success': m.type == 'success',
+          }"
+        >
+          <Icon v-if="m.type == 'error'" icon="mingcute:close-circle-fill" class="text-2xl" />
+          <Icon v-else-if="m.type == 'success'" icon="mingcute:check-circle-fill" class="text-2xl" />
+          <Icon v-else icon="mingcute:warning-fill" class="text-2xl" />
+
+          <span>{{ m.message }}</span>
         </div>
       </Animate>
     </div>
