@@ -29,6 +29,8 @@ const menus = computed(() => {
       return [];
   }
 });
+
+const breadcrumbs = useBreadcrumb();
 </script>
 
 <template>
@@ -55,8 +57,16 @@ const menus = computed(() => {
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content flex flex-col bg-neutral relative h-screen">
           <!-- Page content here -->
-
-          <div class="overflow-y-auto h-full p-6 md:p-8 pt-24 md:pt-24">
+          <div class="overflow-y-auto h-full p-6 md:p-8 pt-20 md:pt-20">
+            <div v-if="breadcrumbs.length" class="breadcrumbs text-sm mb-4">
+              <ul>
+                <li v-for="b in breadcrumbs">
+                  <NuxtLink v-if="b.href" :to="b.href">{{ b.text }}</NuxtLink>
+                  <template v-else>{{ b.text }}</template>
+                </li>
+              </ul>
+            </div>
+            <div v-else class="mb-4"></div>
             <slot />
           </div>
           <Alert left />

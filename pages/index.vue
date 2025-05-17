@@ -3,6 +3,8 @@ definePageMeta({
   middleware: ['auth'],
 });
 const auth = useAuthStore();
+
+setBreadcrumb([]);
 </script>
 
 <template>

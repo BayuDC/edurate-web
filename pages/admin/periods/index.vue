@@ -7,6 +7,12 @@ definePageMeta({
   middleware: ['auth'],
 });
 
+setBreadcrumb([
+  { text: 'Admin', href: '/' },
+  { text: 'Academic Periods' },
+  //
+]);
+
 const { data, refresh } = await useApi<{ periods: any[] }>('/periods', {
   default: () => ({ periods: [] }),
 });

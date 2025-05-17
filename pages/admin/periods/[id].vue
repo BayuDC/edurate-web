@@ -3,6 +3,13 @@ definePageMeta({
   middleware: ['auth'],
 });
 
+setBreadcrumb([
+  { text: 'Admin', href: '/' },
+  { text: 'Academic Periods', href: '/admin/periods' },
+  { text: 'Edit' },
+  //
+]);
+
 const route = useRoute();
 const period = usePeriodStore();
 
