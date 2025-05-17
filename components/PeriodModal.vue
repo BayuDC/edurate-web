@@ -8,13 +8,10 @@ const emit = defineEmits<{
 const period = usePeriodStore();
 const dialog = ref<InstanceType<typeof Dialog> | null>(null);
 
-function onCancel() {
-  period.reset();
-}
+function onCancel() {}
 async function onConfirm() {
   if (await period.delete()) {
     dialog.value?.close();
-    period.reset();
     emit('deleted');
   }
 }

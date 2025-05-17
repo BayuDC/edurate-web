@@ -19,7 +19,7 @@ setBreadcrumb([
 
 async function onSave() {
   if (await period.update()) {
-    // await navigateTo('/admin/periods');
+    freeze.value = true;
   }
 }
 
