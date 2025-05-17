@@ -17,7 +17,7 @@ onUnmounted(() => {
     <div
       v-for="m in alert.messages"
       :class="[left ? 'md:translate-x-0 md:left-4 left-[50%] translate-x-[-50%]' : 'left-[50%] translate-x-[-50%]']"
-      class="md:max-w-[30rem] w-full absolute bottom-10 px-4 mx-auto flex flex-col gap-4"
+      class="md:max-w-[30rem] w-full absolute bottom-8 px-4 mx-auto flex flex-col gap-4"
     >
       <Animate :name="m.active ? 'fadeInUp' : 'fadeOut'" :duration="300" class="">
         <div

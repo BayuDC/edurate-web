@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Dialog } from '#components';
 import { Icon } from '@iconify/vue';
 
 definePageMeta({
@@ -6,9 +7,27 @@ definePageMeta({
   middleware: ['auth'],
 });
 
-const { data } = await useApi<{ periods: any[] }>('/periods', {
+const { data, refresh } = await useApi<{ periods: any[] }>('/periods', {
   default: () => ({ periods: [] }),
 });
+
+const dialog = ref<InstanceType<typeof Dialog> | null>(null);
+const period = usePeriodStore();
+
+function showDialog(id: number, name: string) {
+  dialog.value?.show(name);
+  period.id = id;
+}
+function onCancel() {
+  period.reset();
+}
+async function onConfirm() {
+  if (await period.delete()) {
+    dialog.value?.close();
+    period.reset();
+    await refresh();
+  }
+}
 </script>
 
 <template>
@@ -32,7 +51,7 @@ const { data } = await useApi<{ periods: any[] }>('/periods', {
       </div>
     </div>
 
-    <div class="overflow-x-auto text-white bg-base-100 rounded-xl shadow-lg">
+    <div class="overflow-x-auto h-full text-white bg-base-100 rounded-xl shadow-lg">
       <table class="table">
         <thead>
           <tr>
@@ -57,7 +76,7 @@ const { data } = await useApi<{ periods: any[] }>('/periods', {
                   <Icon icon="mingcute:edit-2-fill" class="text-lg" />
                 </div>
               </NuxtLink>
-              <button class="btn btn-accent btn-sm">
+              <button class="btn btn-accent btn-sm" @click="showDialog(p.id, p.name)">
                 <div class="flex items-center gap-1">
                   <Icon icon="mingcute:delete-2-fill" class="text-lg" />
                 </div>
@@ -67,6 +86,8 @@ const { data } = await useApi<{ periods: any[] }>('/periods', {
         </tbody>
       </table>
     </div>
+
+    <Dialog ref="dialog" @cancel="onCancel" @confirm="onConfirm" />
   </main>
 </template>
 

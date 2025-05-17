@@ -53,12 +53,12 @@ const menus = computed(() => {
     <div class="">
       <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-        <div
-          class="drawer-content overflow-scroll flex flex-col bg-neutral p-6 md:p-8 pt-24 md:pt-24 relative h-screen"
-        >
+        <div class="drawer-content flex flex-col bg-neutral relative h-screen">
           <!-- Page content here -->
 
-          <slot />
+          <div class="overflow-y-auto h-full p-6 md:p-8 pt-24 md:pt-24">
+            <slot />
+          </div>
           <Alert left />
         </div>
         <div class="drawer-side pt-16">

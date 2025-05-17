@@ -58,6 +58,14 @@ export const usePeriodStore = defineStore('period', () => {
     return true;
   }
 
+  async function destroy(): Promise<boolean> {
+    const err = await useApiDelete(`/periods/${id.value}`);
+    if (err) {
+      return false;
+    }
+    return true;
+  }
+
   function reset() {
     id.value = 0;
     data.value.name = '';
@@ -68,5 +76,5 @@ export const usePeriodStore = defineStore('period', () => {
     error.value.endDate = '';
   }
 
-  return { id, data, error, load, create, update, reset };
+  return { id, data, error, load, create, update, delete: destroy, reset };
 });
