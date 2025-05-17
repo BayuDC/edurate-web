@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Dialog } from '#components';
 import { Icon } from '@iconify/vue';
 
 definePageMeta({
@@ -17,23 +16,7 @@ const { data, refresh } = await useApi<{ periods: any[] }>('/periods', {
   default: () => ({ periods: [] }),
 });
 
-const dialog = ref<InstanceType<typeof Dialog> | null>(null);
-const period = usePeriodStore();
-
-function showDialog(id: number, name: string) {
-  dialog.value?.show(name);
-  period.id = id;
-}
-function onCancel() {
-  period.reset();
-}
-async function onConfirm() {
-  if (await period.delete()) {
-    dialog.value?.close();
-    period.reset();
-    await refresh();
-  }
-}
+const modal = ref<any>(null);
 </script>
 
 <template>
@@ -77,12 +60,17 @@ async function onConfirm() {
             <td>{{ p.endDate }}</td>
             <td><input type="checkbox" :checked="false" class="toggle toggle-primary" /></td>
             <td class="flex gap-2">
-              <NuxtLink :to="`/admin/periods/${p.id}`" class="btn btn-secondary btn-sm">
+              <NuxtLink :to="`/admin/periods/${p.id}`" class="btn btn-primary btn-sm">
+                <div class="flex items-center gap-1">
+                  <Icon icon="mingcute:information-fill" class="text-lg" />
+                </div>
+              </NuxtLink>
+              <NuxtLink :to="`/admin/periods/${p.id}?edit=true`" class="btn btn-secondary btn-sm">
                 <div class="flex items-center gap-1">
                   <Icon icon="mingcute:edit-2-fill" class="text-lg" />
                 </div>
               </NuxtLink>
-              <button class="btn btn-accent btn-sm" @click="showDialog(p.id, p.name)">
+              <button class="btn btn-accent btn-sm" @click="modal?.select(p.id, p.name)">
                 <div class="flex items-center gap-1">
                   <Icon icon="mingcute:delete-2-fill" class="text-lg" />
                 </div>
@@ -92,8 +80,7 @@ async function onConfirm() {
         </tbody>
       </table>
     </div>
-
-    <Dialog ref="dialog" @cancel="onCancel" @confirm="onConfirm" />
+    <PeriodModal ref="modal" @deleted="refresh" />
   </main>
 </template>
 
