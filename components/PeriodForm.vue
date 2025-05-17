@@ -10,6 +10,7 @@ const emit = defineEmits<{
   (e: 'delete'): void;
 }>();
 
+const route = useRoute();
 const period = usePeriodStore();
 
 function onSubmit() {
@@ -56,7 +57,7 @@ function onSubmit() {
         </button>
       </template>
       <template v-else>
-        <NuxtLink class="btn btn-accent btn-soft mt-4" to="?">
+        <NuxtLink v-if="route.path != '/admin/periods/new'" class="btn btn-accent btn-soft mt-4" to="?">
           <Icon icon="mingcute:close-fill" class="text-xl" />
           Cancel
         </NuxtLink>
