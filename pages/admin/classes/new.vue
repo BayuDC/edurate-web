@@ -5,28 +5,27 @@ definePageMeta({
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },
-  { text: 'Manage Course', href: '/admin/courses' },
+  { text: 'Manage Class', href: '/admin/classes' },
   { text: 'New' },
-
   //
 ]);
 
-const course = useCourseStore();
+const $class = useClassStore();
 
 async function onSave() {
-  if (await course.create()) {
-    await navigateTo('/admin/courses');
+  if (await $class.create()) {
+    await navigateTo('/admin/classes');
   }
 }
 
 onUnmounted(() => {
-  course.reset();
+  $class.reset();
 });
 </script>
 
 <template>
-  <Main title="Manage Course" simple>
-    <CourseForm @save="onSave" />
+  <Main title="Manage Class" simple>
+    <ClassForm @save="onSave" />
   </Main>
 </template>
 
