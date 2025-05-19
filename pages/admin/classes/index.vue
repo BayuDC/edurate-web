@@ -29,7 +29,8 @@ const modal = ref<any>(null);
       </TableRow>
     </Table>
 
-    <ClassModal ref="modal" @deleted="refresh" />
+    <!-- <ClassModal ref="modal" @deleted="refresh" /> -->
+    <Modal store="class" ref="modal" @deleted="refresh" />
   </Main>
 </template>
 

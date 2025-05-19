@@ -38,7 +38,7 @@ const modal = ref<any>(null);
 <template>
   <Main title="Academic Periods" simple>
     <PeriodForm @save="onSave" :freeze="freeze" @delete="modal.select(period.id, period.data.name)" />
-    <PeriodModal ref="modal" @deleted="navigateTo('/admin/periods')" />
+    <Modal store="period" ref="modal" @deleted="navigateTo('/admin/periods')" />
   </Main>
 </template>
 

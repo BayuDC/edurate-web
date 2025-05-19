@@ -37,7 +37,7 @@ const modal = ref<any>(null);
 <template>
   <Main title="Manage Courses" simple>
     <CourseForm @save="onSave" :freeze="freeze" @delete="modal.select(course.id, course.data.name)" />
-    <CourseModal ref="modal" @deleted="navigateTo('/admin/courses')" />
+    <Modal store="course" ref="modal" @deleted="navigateTo('/admin/courses')" />
   </Main>
 </template>
 

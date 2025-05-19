@@ -32,7 +32,7 @@ const modal = ref<any>(null);
       </TableRow>
     </Table>
 
-    <CourseModal ref="modal" @deleted="refresh" />
+    <Modal store="course" ref="modal" @deleted="refresh" />
   </Main>
 </template>
 

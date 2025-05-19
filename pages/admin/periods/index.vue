@@ -34,7 +34,7 @@ const modal = ref<any>(null);
       </TableRow>
     </Table>
 
-    <PeriodModal ref="modal" @deleted="refresh" />
+    <Modal store="period" ref="modal" @deleted="refresh" />
   </Main>
 </template>
 
