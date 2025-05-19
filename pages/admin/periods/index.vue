@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Icon } from '@iconify/vue';
-
 definePageMeta({
   layout: 'default',
   middleware: ['auth'],
