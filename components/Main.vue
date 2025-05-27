@@ -5,6 +5,7 @@ const route = useRoute();
 const props = defineProps<{
   title: string;
   simple?: boolean;
+  disableAddButton?: boolean;
 }>();
 </script>
 
@@ -21,7 +22,7 @@ const props = defineProps<{
             </div>
           </button>
         </div>
-        <NuxtLink :to="route.path + '/new'" class="btn join-item btn-primary font-bold">
+        <NuxtLink v-if="!disableAddButton" :to="route.path + '/new'" class="btn join-item btn-primary font-bold">
           <div class="flex items-center gap-2">
             <Icon icon="mingcute:add-fill" class="text-xl" />
           </div>

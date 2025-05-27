@@ -3,7 +3,6 @@ export const useClassStore = defineStore('class', () => {
 
   const data = ref({
     name: '',
-    periodId: 1, //temp
   });
   const error = ref({
     name: '',

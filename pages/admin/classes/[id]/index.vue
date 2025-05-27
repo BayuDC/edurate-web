@@ -12,7 +12,7 @@ await $class.load();
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },
-  { text: 'Manage Classes', href: '/admin/classes' },
+  { text: 'Class', href: '/admin/classes' },
   { text: `${$class.data.name}` },
 ]);
 
@@ -35,7 +35,7 @@ const modal = ref<any>(null);
 </script>
 
 <template>
-  <Main title="Manage Classes" simple>
+  <Main title="Class Detail" simple>
     <ClassForm @save="onSave" :freeze="freeze" @delete="modal.select($class.id, $class.data.name)" />
     <Modal store="class" ref="modal" @deleted="navigateTo('/admin/classes')" />
   </Main>
