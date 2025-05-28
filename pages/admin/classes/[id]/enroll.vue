@@ -3,11 +3,7 @@ definePageMeta({
   middleware: ['auth'],
 });
 
-const route = useRoute();
 const $class = useClassStore();
-
-$class.id = parseInt(route.params.id as string);
-await $class.load();
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },

@@ -1,13 +1,9 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['auth'],
+  middleware: ['auth', 'load-class'],
 });
 
-const route = useRoute();
 const $class = useClassStore();
-
-$class.id = parseInt(route.params.id as string);
-await $class.load();
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },
@@ -17,6 +13,7 @@ setBreadcrumb([
 ]);
 
 const { data, refresh } = await useApi<{ students: any[] }>(`/classes/${$class.id}/students`, {
+  query: { limit: 50 },
   default: () => ({ students: [] }),
 });
 </script>

@@ -1,14 +1,13 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['auth'],
+  middleware: ['auth', 'load-class'],
 });
 
-const route = useRoute();
 const $class = useClassStore();
-const freeze = ref(true);
+const edit = useRouteQuery('edit');
 
-$class.id = parseInt(route.params.id as string);
-await $class.load();
+const freeze = ref(true);
+const modal = ref<any>(null);
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },
@@ -22,16 +21,7 @@ async function onSave() {
   }
 }
 
-watchImmediate(
-  () => route.query.edit,
-  v => (freeze.value = v !== 'true')
-);
-
-onUnmounted(() => {
-  $class.reset();
-});
-
-const modal = ref<any>(null);
+watchImmediate(edit, v => (freeze.value = v !== 'true'));
 </script>
 
 <template>
