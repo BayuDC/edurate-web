@@ -4,8 +4,17 @@ import 'animate.css';
 const route = useRoute();
 
 useNuxtApp().hook('page:finish', () => {
+  // for /admin/classes/** */
   if (!/^\/admin\/classes\/\d+(?:\/.*)?$/.test(route.path)) {
     useClassStore().reset();
+  }
+  // for /admin/courses/** */
+  if (!/^\/admin\/courses\/\d+(?:\/.*)?$/.test(route.path)) {
+    useCourseStore().reset();
+  }
+  // for /admin/periods/** */
+  if (!/^\/admin\/periods\/\d+(?:\/.*)?$/.test(route.path)) {
+    usePeriodStore().reset();
   }
 });
 </script>

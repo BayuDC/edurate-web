@@ -5,7 +5,7 @@ definePageMeta({
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },
-  { text: 'Academic Periods', href: '/admin/periods' },
+  { text: 'Period', href: '/admin/periods' },
   { text: 'New' },
   //
 ]);
@@ -25,8 +25,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Main title="Academic Periods" simple>
-    <PeriodForm @save="onSave" />
+  <Main title="New Period" simple>
+    <FormPeriod @save="onSave" />
   </Main>
 </template>
 

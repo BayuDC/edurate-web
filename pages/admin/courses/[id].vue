@@ -1,14 +1,13 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['auth'],
+  middleware: ['auth', 'load-course'],
 });
 
-const route = useRoute();
 const course = useCourseStore();
-const freeze = ref(true);
+const edit = useRouteQuery('edit');
 
-course.id = parseInt(route.params.id as string);
-await course.load();
+const freeze = ref(true);
+const modal = ref<any>(null);
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },
@@ -22,21 +21,12 @@ async function onSave() {
   }
 }
 
-watchImmediate(
-  () => route.query.edit,
-  v => (freeze.value = v !== 'true')
-);
-
-onUnmounted(() => {
-  course.reset();
-});
-
-const modal = ref<any>(null);
+watchImmediate(edit, v => (freeze.value = v !== 'true'));
 </script>
 
 <template>
-  <Main title="Manage Courses" simple>
-    <CourseForm @save="onSave" :freeze="freeze" @delete="modal.select(course.id, course.data.name)" />
+  <Main title="Courses Detail" simple>
+    <FormCourse @save="onSave" :freeze="freeze" @delete="modal.select(course.id, course.data.name)" />
     <Modal store="course" ref="modal" @deleted="navigateTo('/admin/courses')" />
   </Main>
 </template>

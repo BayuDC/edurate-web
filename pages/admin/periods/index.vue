@@ -6,7 +6,7 @@ definePageMeta({
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },
-  { text: 'Academic Periods' },
+  { text: 'Period' },
   //
 ]);
 

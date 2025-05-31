@@ -5,7 +5,7 @@ definePageMeta({
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },
-  { text: 'Manage Course' },
+  { text: 'Course' },
   //
 ]);
 
@@ -17,7 +17,7 @@ const modal = ref<any>(null);
 </script>
 
 <template>
-  <Main title="Manage Course">
+  <Main title="Course List">
     <Table :columns="['Code', 'Name', 'Description']">
       <TableRow
         v-for="c in data.courses"

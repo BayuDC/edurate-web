@@ -26,7 +26,7 @@ watchImmediate(edit, v => (freeze.value = v !== 'true'));
 
 <template>
   <Main title="Class Detail" simple>
-    <ClassForm @save="onSave" :freeze="freeze" @delete="modal.select($class.id, $class.data.name)" />
+    <FormClass @save="onSave" :freeze="freeze" @delete="modal.select($class.id, $class.data.name)" />
     <Modal store="class" ref="modal" @deleted="navigateTo('/admin/classes')" />
   </Main>
 </template>

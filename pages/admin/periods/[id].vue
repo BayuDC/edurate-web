@@ -1,18 +1,17 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['auth'],
+  middleware: ['auth', 'load-period'],
 });
 
-const route = useRoute();
 const period = usePeriodStore();
-const freeze = ref(true);
+const edit = useRouteQuery('edit');
 
-period.id = parseInt(route.params.id as string);
-await period.load();
+const freeze = ref(true);
+const modal = ref<any>(null);
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },
-  { text: 'Academic Periods', href: '/admin/periods' },
+  { text: 'Period', href: '/admin/periods' },
   { text: `${period.data.name}` },
   //
 ]);
@@ -23,21 +22,12 @@ async function onSave() {
   }
 }
 
-watchImmediate(
-  () => route.query.edit,
-  v => (freeze.value = v !== 'true')
-);
-
-onUnmounted(() => {
-  period.reset();
-});
-
-const modal = ref<any>(null);
+watchImmediate(edit, v => (freeze.value = v !== 'true'));
 </script>
 
 <template>
-  <Main title="Academic Periods" simple>
-    <PeriodForm @save="onSave" :freeze="freeze" @delete="modal.select(period.id, period.data.name)" />
+  <Main title="Period Detail" simple>
+    <FormPeriod @save="onSave" :freeze="freeze" @delete="modal.select(period.id, period.data.name)" />
     <Modal store="period" ref="modal" @deleted="navigateTo('/admin/periods')" />
   </Main>
 </template>

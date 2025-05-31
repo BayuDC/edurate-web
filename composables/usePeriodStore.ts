@@ -12,8 +12,9 @@ export const usePeriodStore = defineStore('period', () => {
     endDate: '',
   });
 
-  async function load(): Promise<void> {
-    if (!id.value) return;
+  async function load(_id?: number): Promise<void> {
+    if (_id) id.value = _id;
+    else if (!id.value) return;
 
     const result = await useApi<{ period: any }>(`/periods/${id.value}`, {});
 

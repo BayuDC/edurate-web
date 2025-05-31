@@ -25,7 +25,7 @@ onUnmounted(() => {
 
 <template>
   <Main title="New Class" simple>
-    <ClassForm @save="onSave" />
+    <FormClass @save="onSave" />
   </Main>
 </template>
 

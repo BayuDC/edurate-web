@@ -8,10 +8,11 @@ const menus = computed(() => {
     case 'admin':
       return [
         { name: 'Dashboard', path: '/admin/dashboard', icon: 'mingcute:chart-bar-fill' },
-        { name: 'Manage User', path: '/admin/users', icon: 'mingcute:group-fill' },
+        { name: 'Academic Periods', path: '/admin/periods', icon: 'mingcute:calendar-month-fill' },
+        { name: 'Manage Student', path: '/admin/students', icon: 'mingcute:group-fill' },
+        { name: 'Manage Teacher', path: '/admin/teachers', icon: 'mingcute:user-3-fill' },
         { name: 'Manage Class', path: '/admin/classes', icon: 'mingcute:hexagons-fill' },
         { name: 'Manage Course', path: '/admin/courses', icon: 'mingcute:book-2-fill' },
-        { name: 'Academic Periods', path: '/admin/periods', icon: 'mingcute:calendar-month-fill' },
         { name: 'Activity Log', path: '/admin/log', icon: 'mingcute:to-do-fill' },
       ];
     case 'teacher':
