@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 definePageMeta({
-  middleware: ['auth'],
+  middleware: ['auth', 'load-class'],
 });
 
 const $class = useClassStore();
@@ -60,10 +60,17 @@ function handleEnroll() {
     if (student && student.status != 'enrolled') {
       student.status = 'enrolling';
 
-      // Simulate an API call to enroll the student
-      setTimeout(() => {
-        student.status = 'enrolled';
-      }, 1000);
+      $fetch(`/classes/${$class.id}/students`, {
+        method: 'POST',
+        body: { studentId: student.id },
+        ...useFetchOption(),
+      })
+        .then(() => {
+          student.status = 'enrolled';
+        })
+        .catch(() => {
+          student.status = 'failed';
+        });
     }
   }
 }
@@ -85,6 +92,7 @@ function handleEnroll() {
         <td>
           <input
             type="checkbox"
+            :disabled="s.status == 'enrolled'"
             class="checkbox checkbox-primary"
             @click="handleClick($event, s.id, index)"
             @change="s.selected = !s.selected"
