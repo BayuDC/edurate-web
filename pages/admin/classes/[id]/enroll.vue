@@ -13,9 +13,20 @@ setBreadcrumb([
 ]);
 
 // !
-const page = useRouteQuery<number>('page', 1);
+const deleteMode = ref(false);
+watch(deleteMode, v => {
+  page.value = 1;
+});
 
-const { data, refresh, pending } = await useApi<{ students: any[]; meta: any }>(`/students/available`, {
+const page = useRouteQuery<number>('page', 1);
+const url = computed(() => {
+  if (deleteMode.value) {
+    return `/classes/${$class.id}/students`;
+  }
+  return `/students/available`;
+});
+
+const { data, refresh, pending } = await useApi<{ students: any[]; meta: any }>(url, {
   key: 'available-students',
   default: () => ({ students: [], meta: {} }),
   query: { page, limit: 10 },
@@ -66,7 +77,7 @@ function handleEnroll() {
       student.status = 'enrolling';
 
       $fetch(`/classes/${$class.id}/students`, {
-        method: 'POST',
+        method: deleteMode.value ? 'DELETE' : 'POST',
         body: { studentId: student.id },
         ...useFetchOption(),
       })
@@ -81,31 +92,56 @@ function handleEnroll() {
 }
 async function handleReset() {
   page.value = 1;
-  selecteds.value = [];
 }
 
 function getStatusClass(status: string) {
-  switch (status) {
-    case 'enrolled':
-      return 'status-success';
-    case 'enrolling':
-      return 'status-warning';
-    case 'failed':
-      return 'status-error';
-    default:
-      return 'status-primary';
+  if (deleteMode.value) {
+    switch (status) {
+      case 'enrolled':
+        return 'status-primary';
+      case 'enrolling':
+        return 'status-warning';
+      case 'failed':
+        return 'status-error';
+      default:
+        return 'status-success';
+    }
+  } else {
+    switch (status) {
+      case 'enrolled':
+        return 'status-success';
+      case 'enrolling':
+        return 'status-warning';
+      case 'failed':
+        return 'status-error';
+      default:
+        return 'status-primary';
+    }
   }
 }
 function getStatusText(status: string) {
-  switch (status) {
-    case 'enrolled':
-      return 'Enrolled';
-    case 'enrolling':
-      return 'Enrolling...';
-    case 'failed':
-      return 'Failed to Enroll';
-    default:
-      return 'Not in Class';
+  if (deleteMode.value) {
+    switch (status) {
+      case 'enrolled':
+        return 'Not in Class';
+      case 'enrolling':
+        return 'Unenrolling...';
+      case 'failed':
+        return 'Failed to Unenroll';
+      default:
+        return 'Enrolled';
+    }
+  } else {
+    switch (status) {
+      case 'enrolled':
+        return 'Enrolled';
+      case 'enrolling':
+        return 'Enrolling...';
+      case 'failed':
+        return 'Failed to Enroll';
+      default:
+        return 'Not in Class';
+    }
   }
 }
 </script>
@@ -147,11 +183,17 @@ function getStatusText(status: string) {
       </tr>
     </Table>
 
-    <div class="flex justify-end mt-4">
-      <Pagination class="mr-auto" v-bind="resolveMeta(data.meta)" />
+    <div class="flex flex-col md:flex-row gap-4 justify-end mt-4">
+      <Pagination class="md:ml-0 ml-auto mr-auto" v-bind="resolveMeta(data.meta)" />
 
-      <button class="btn btn-secondary" @click="handleReset">Refresh</button>
-      <button class="btn btn-primary ml-2" @click="handleEnroll">Enroll</button>
+      <div class="flex justify-center items-center gap-4">
+        <button class="btn btn-secondary" @click="handleReset">Refresh</button>
+        <button class="btn" :class="[deleteMode ? 'btn-accent' : 'btn-primary']" @click="handleEnroll">
+          <span v-if="deleteMode"> Unenroll </span>
+          <span v-else> Enroll </span>
+        </button>
+        <input type="checkbox" v-model="deleteMode" class="toggle toggle-accent" />
+      </div>
     </div>
   </Main>
 </template>
