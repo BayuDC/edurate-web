@@ -13,15 +13,20 @@ setBreadcrumb([
 ]);
 
 // !
+const page = useRouteQuery<number>('page', 1);
 
-const { data, refresh } = await useApi<{ students: any[] }>(`/students/available`, {
-  default: () => ({ students: [] }),
+const { data, refresh, pending } = await useApi<{ students: any[]; meta: any }>(`/students/available`, {
+  key: 'available-students',
+  default: () => ({ students: [], meta: {} }),
+  query: { page, limit: 10 },
 });
+
 const students = ref(data.value.students);
-watchImmediate(
-  () => data.value.students,
-  v => (students.value = v.map(s => ({ ...s, selected: false, status: 'none' })))
-);
+watchImmediate(data, v => (students.value = data.value.students.map(s => ({ ...s, selected: false, status: 'none' }))));
+watch(page, () => {
+  selecteds.value = [];
+  lastSelected.value = -1;
+});
 
 const selecteds = ref<number[]>([]);
 const lastSelected = ref<number>(-1);
@@ -74,6 +79,35 @@ function handleEnroll() {
     }
   }
 }
+async function handleReset() {
+  page.value = 1;
+  selecteds.value = [];
+}
+
+function getStatusClass(status: string) {
+  switch (status) {
+    case 'enrolled':
+      return 'status-success';
+    case 'enrolling':
+      return 'status-warning';
+    case 'failed':
+      return 'status-error';
+    default:
+      return 'status-primary';
+  }
+}
+function getStatusText(status: string) {
+  switch (status) {
+    case 'enrolled':
+      return 'Enrolled';
+    case 'enrolling':
+      return 'Enrolling...';
+    case 'failed':
+      return 'Failed to Enroll';
+    default:
+      return 'Not in Class';
+  }
+}
 </script>
 
 <template>
@@ -86,10 +120,10 @@ function handleEnroll() {
         class="hover:bg-base-300"
         tabindex="0"
       >
-        <th>{{ s.id }}</th>
-        <td>{{ s.code }}</td>
-        <td>{{ s.name }}</td>
-        <td>
+        <TableCell :loading="pending" isTh>{{ s.id }}</TableCell>
+        <TableCell :loading="pending">{{ s.code }}</TableCell>
+        <TableCell :loading="pending">{{ s.name }}</TableCell>
+        <TableCell :loading="pending">
           <input
             type="checkbox"
             :disabled="s.status == 'enrolled'"
@@ -99,52 +133,24 @@ function handleEnroll() {
             v-model="selecteds"
             :value="index"
           />
-        </td>
-        <td class="">
-          <div v-if="s.status == 'none'" class="flex gap-2 items-center">
+        </TableCell>
+        <TableCell :loading="pending">
+          <div class="flex gap-2 items-center">
             <div class="inline-grid *:[grid-area:1/1]">
-              <div class="status status-primary animate-ping"></div>
-              <div class="status status-primary"></div>
+              <div :class="['status', getStatusClass(s.status), 'animate-ping']"></div>
+              <div :class="['status', getStatusClass(s.status)]"></div>
             </div>
-            Not in Class
+            {{ getStatusText(s.status) }}
           </div>
-          <div v-else-if="s.status == 'enrolled'" class="flex gap-2 items-center">
-            <div class="inline-grid *:[grid-area:1/1]">
-              <div class="status status-success animate-ping"></div>
-              <div class="status status-success"></div>
-            </div>
-            Enrolled
-          </div>
-          <div v-else-if="s.status == 'enrolling'" class="flex gap-2 items-center">
-            <div class="inline-grid *:[grid-area:1/1]">
-              <div class="status status-warning animate-ping"></div>
-              <div class="status status-warning"></div>
-            </div>
-            Enrolling...
-          </div>
-          <div v-else-if="s.status == 'failed'" class="flex gap-2 items-center">
-            <div class="inline-grid *:[grid-area:1/1]">
-              <div class="status status-error animate-ping"></div>
-              <div class="status status-error"></div>
-            </div>
-            Failed to Enroll
-          </div>
-        </td>
+        </TableCell>
+        <td><Loader :loading="pending" /></td>
       </tr>
     </Table>
 
     <div class="flex justify-end mt-4">
-      <button
-        class="btn btn-secondary"
-        @click="
-          () => {
-            selecteds = [];
-            refresh();
-          }
-        "
-      >
-        Refresh
-      </button>
+      <Pagination class="mr-auto" v-bind="resolveMeta(data.meta)" />
+
+      <button class="btn btn-secondary" @click="handleReset">Refresh</button>
       <button class="btn btn-primary ml-2" @click="handleEnroll">Enroll</button>
     </div>
   </Main>
