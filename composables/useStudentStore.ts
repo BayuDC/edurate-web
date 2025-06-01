@@ -1,14 +1,17 @@
 export const useStudentStore = defineStore('student', () => {
   const id = ref(0);
+  const init = {
+    code: '',
+    name: '',
+    gender: '',
+    birthDate: '',
+    birthPlace: '',
+    address: '',
+    phone: '',
+  };
 
-  const data = ref({
-    code: '',
-    name: '',
-  });
-  const error = ref({
-    code: '',
-    name: '',
-  });
+  const data = ref({ ...init });
+  const error = ref({ ...init });
 
   async function load(_id?: number): Promise<void> {
     if (_id) id.value = _id;
@@ -19,6 +22,12 @@ export const useStudentStore = defineStore('student', () => {
     if (result.data.value) {
       data.value.code = result.data.value.student.code;
       data.value.name = result.data.value.student.name;
+      data.value.gender = result.data.value.student.profile.gender;
+      data.value.birthDate = result.data.value.student.profile.birthDate;
+      data.value.birthPlace = result.data.value.student.profile.birthPlace;
+      data.value.address = result.data.value.student.profile.address;
+      data.value.phone = result.data.value.student.profile.phone;
+
       return;
     }
 
@@ -34,10 +43,16 @@ export const useStudentStore = defineStore('student', () => {
     if (err) {
       error.value.code = err.code;
       error.value.name = err.name;
+      error.value.gender = err.gender;
+      error.value.birthDate = err.birthDate;
+      error.value.birthPlace = err.birthPlace;
+      error.value.address = err.address;
+      error.value.phone = err.phone;
+
       return false;
     }
 
-    error.value.code = error.value.name = '';
+    error.value = { ...init };
     return true;
   }
 
@@ -47,10 +62,15 @@ export const useStudentStore = defineStore('student', () => {
     if (err) {
       error.value.code = err.code;
       error.value.name = err.name;
+      error.value.gender = err.gender;
+      error.value.birthDate = err.birthDate;
+      error.value.birthPlace = err.birthPlace;
+      error.value.address = err.address;
+      error.value.phone = err.phone;
       return false;
     }
 
-    error.value.code = error.value.name = '';
+    error.value = { ...init };
     return true;
   }
 
@@ -64,11 +84,8 @@ export const useStudentStore = defineStore('student', () => {
 
   function reset() {
     id.value = 0;
-    data.value.code = '';
-    data.value.name = '';
-    error.value.code = '';
-    error.value.name = '';
+    data.value = { ...init };
+    error.value = { ...init };
   }
-
   return { id, data, error, load, create, update, delete: destroy, reset };
 });
