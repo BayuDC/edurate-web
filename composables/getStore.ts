@@ -1,4 +1,4 @@
-export default function useGetStore(store: 'class' | 'course' | 'period' | 'student' | string) {
+export default function useGetStore(store: 'class' | 'course' | 'period' | 'student' | 'teacher' | string) {
   switch (store) {
     case 'class':
       return useClassStore();
@@ -8,6 +8,8 @@ export default function useGetStore(store: 'class' | 'course' | 'period' | 'stud
       return usePeriodStore();
     case 'student':
       return useStudentStore();
+    case 'teacher':
+      return useTeacherStore();
     default:
       throw new Error('Invalid store type');
   }

@@ -21,6 +21,10 @@ useNuxtApp().hook('page:finish', () => {
   if (!/^\/admin\/students\/\d+(?:\/.*)?$/.test(route.path)) {
     useStudentStore().reset();
   }
+  // for /admin/teachers/** */
+  if (!/^\/admin\/teachers\/\d+(?:\/.*)?$/.test(route.path)) {
+    useTeacherStore().reset();
+  }
 });
 </script>
 
