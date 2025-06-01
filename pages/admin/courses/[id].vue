@@ -11,7 +11,7 @@ const modal = ref<any>(null);
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },
-  { text: 'Manage Courses', href: '/admin/courses' },
+  { text: 'Course', href: '/admin/courses' },
   { text: `${course.data.name}` },
 ]);
 

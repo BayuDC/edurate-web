@@ -4,7 +4,7 @@ definePageMeta({
 });
 
 setBreadcrumb([
-  { text: 'Admin', href: '/' },
+  { text: 'Admin', href: '/admin' },
   { text: 'Course' },
   //
 ]);
