@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   columns: string[];
+  loading?: boolean;
 }>();
 </script>
 
@@ -15,7 +16,16 @@ defineProps<{
         </tr>
       </thead>
       <tbody>
-        <slot />
+        <slot>
+          <tr>
+            <td colspan="100%" class="text-center">
+              <div class="h-10 flex items-center justify-center">
+                <span v-if="!loading"> No data available </span>
+                <Loader v-else :loading="true" />
+              </div>
+            </td>
+          </tr>
+        </slot>
       </tbody>
     </table>
   </div>

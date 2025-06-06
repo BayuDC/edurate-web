@@ -21,6 +21,18 @@ const course = useCourseStore();
       :error="course.error.description"
       :disabled="freeze"
     />
+
+    <fieldset class="fieldset" v-if="freeze">
+      <label class="label text-base-content font-bold">Menu</label>
+      <div class="flex gap-2">
+        <NuxtLink :to="`/admin/courses/${course.id}/students`" class="btn btn-primary btn-soft btn-sm">
+          Students List
+        </NuxtLink>
+        <NuxtLink :to="`/admin/courses/${course.id}/enroll`" class="btn btn-secondary btn-soft btn-sm">
+          Enrollment
+        </NuxtLink>
+      </div>
+    </fieldset>
   </Form>
 </template>
 

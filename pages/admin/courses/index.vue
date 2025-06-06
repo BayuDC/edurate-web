@@ -18,7 +18,7 @@ const modal = ref<any>(null);
 
 <template>
   <Main title="Course List">
-    <Table :columns="['Code', 'Name', 'Description']">
+    <Table :columns="['Code', 'Name', 'Menu']">
       <TableRow
         v-for="c in data.courses"
         :key="c.id"
@@ -28,7 +28,16 @@ const modal = ref<any>(null);
         <th>{{ c.id }}</th>
         <td>{{ c.code }}</td>
         <td>{{ c.name }}</td>
-        <td>{{ c.description }}</td>
+        <td>
+          <div class="flex gap-2">
+            <NuxtLink :to="`/admin/courses/${c.id}/students`" class="btn btn-primary btn-soft btn-sm">
+              Students List
+            </NuxtLink>
+            <NuxtLink :to="`/admin/courses/${c.id}/enroll`" class="btn btn-secondary btn-soft btn-sm">
+              Enrollment
+            </NuxtLink>
+          </div>
+        </td>
       </TableRow>
     </Table>
 
