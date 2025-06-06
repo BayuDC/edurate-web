@@ -19,8 +19,11 @@ defineProps<{
         <slot>
           <tr>
             <td colspan="100%" class="text-center">
-              <div class="h-10 flex items-center justify-center">
-                <span v-if="!loading"> No data available </span>
+              <div class="pt-8 py-10 flex-row items-center justify-center">
+                <template v-if="!loading">
+                  <div>No data available</div>
+                  <div><slot name="fallback" /></div>
+                </template>
                 <Loader v-else :loading="true" />
               </div>
             </td>

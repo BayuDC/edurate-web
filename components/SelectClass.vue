@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const classId = useRouteQuery<number>('class');
+const classId = useRouteQuery('class', '');
 
 const { data } = await useApi<{ classes: { id: number; name: string }[] }>(`/classes`, {
   key: 'classes',
@@ -9,8 +9,8 @@ const { data } = await useApi<{ classes: { id: number; name: string }[] }>(`/cla
 
 <template>
   <select class="select select-secondary" v-model="classId">
-    <!-- <option selected disabled>Select Class</option> -->
-    <option v-for="c in data.classes" :value="c.id">{{ c.name }}</option>
+    <option disabled value="">Select Class</option>
+    <option v-for="c in data.classes" :key="c.id" :value="String(c.id)">{{ c.name }}</option>
   </select>
 </template>
 

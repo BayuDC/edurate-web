@@ -13,7 +13,7 @@ setBreadcrumb([
 ]);
 
 const page = useRouteQuery<number>('page', 1);
-const classId = useRouteQuery<number>('class', 1);
+const classId = useRouteQuery<number>('class');
 
 const { data, pending } = await useApi<{ students: any[]; meta: any }>(`/courses/${course.id}/students`, {
   key: 'course-students',
@@ -39,8 +39,11 @@ const { data, pending } = await useApi<{ students: any[]; meta: any }>(`/courses
 
         <td><Loader :loading="pending" /></td>
       </tr>
+
+      <template v-if="!classId" #fallback>Please select a class</template>
+      <template v-else #fallback>Please enroll students first</template>
     </Table>
-    <div class="mt-4">
+    <div class="mt-4" v-if="classId">
       <Pagination v-bind="resolveMeta(data.meta)" />
     </div>
   </Main>
