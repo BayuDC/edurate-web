@@ -25,7 +25,9 @@ const { data, refresh, pending } = await useApi<{ students: any[]; meta: any }>(
     limit: 10,
     page,
     classId,
-    available: true,
+    available: computed(() => {
+      return inverse.value ? null : 1;
+    }),
   },
   default: () => ({ students: [], meta: {} }),
 });
@@ -75,10 +77,10 @@ function handleEnroll() {
       student.status = 'enrolling';
 
       $fetch(`/courses/${course.id}/students`, {
-        method: 'POST',
+        method: inverse.value ? 'DELETE' : 'POST',
         body: {
           studentId: student.id,
-          teacherId: toValue(teacherId),
+          teacherId: inverse.value ? null : toValue(teacherId),
         },
         ...useFetchOption(),
       })
@@ -130,7 +132,7 @@ async function handleReset() {
           />
         </TableCell>
         <TableCell :loading="pending">
-          <BadgeStatus label="Course" :status="s.status" />
+          <BadgeStatus :inverse="inverse" label="Course" :status="s.status" />
         </TableCell>
         <td><Loader :loading="pending" /></td>
       </tr>
