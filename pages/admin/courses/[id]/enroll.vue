@@ -1,35 +1,30 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 definePageMeta({
-  middleware: ['auth', 'load-class'],
+  middleware: ['auth', 'load-course'],
 });
 
-const $class = useClassStore();
+const course = useCourseStore();
+const page = useRouteQuery<number>('page', 1);
+const classId = useRouteQuery<number>('class');
+const teacherId = ref('');
+const teacherError = computed(() => !teacherId.value && selecteds.value.length > 0);
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },
-  { text: 'Class', href: '/admin/classes' },
-  { text: `${$class.data.name}`, href: `/admin/classes/${$class.id}` },
+  { text: 'Courses', href: '/admin/courses' },
+  { text: `${course.data.name}`, href: `/admin/courses/${course.id}` },
   { text: 'Enrollment' },
 ]);
 
-// !
-const deleteMode = ref(false);
-watch(deleteMode, v => {
-  page.value = 1;
-});
-
-const page = useRouteQuery<number>('page', 1);
-const url = computed(() => {
-  if (deleteMode.value) {
-    return `/classes/${$class.id}/students`;
-  }
-  return `/students/available`;
-});
-
-const { data, refresh, pending } = await useApi<{ students: any[]; meta: any }>(url, {
-  key: 'available-students',
+const { data, refresh, pending } = await useApi<{ students: any[]; meta: any }>(`/courses/${course.id}/students`, {
+  key: 'course-students-available',
+  query: {
+    limit: 10,
+    page,
+    classId,
+    available: true,
+  },
   default: () => ({ students: [], meta: {} }),
-  query: { page, limit: 10 },
 });
 
 const students = ref(data.value.students);
@@ -76,9 +71,12 @@ function handleEnroll() {
     if (student && student.status != 'enrolled') {
       student.status = 'enrolling';
 
-      $fetch(`/classes/${$class.id}/students`, {
-        method: deleteMode.value ? 'DELETE' : 'POST',
-        body: { studentId: student.id },
+      $fetch(`/courses/${course.id}/students`, {
+        method: 'POST',
+        body: {
+          studentId: student.id,
+          teacherId: toValue(teacherId),
+        },
         ...useFetchOption(),
       })
         .then(() => {
@@ -90,13 +88,22 @@ function handleEnroll() {
     }
   }
 }
+
 async function handleReset() {
   page.value = 1;
+  selecteds.value = [];
+  teacherId.value = '';
+
+  await refresh();
 }
 </script>
 
 <template>
   <Main title="Student Enrollment" disable-add-button>
+    <template #menu>
+      <SelectClass />
+    </template>
+
     <Table :columns="['Code', 'Name', 'Select', 'Status']">
       <tr
         v-for="(s, index) in students"
@@ -120,23 +127,30 @@ async function handleReset() {
           />
         </TableCell>
         <TableCell :loading="pending">
-          <BadgeStatus label="Class" :status="s.status" :inverse="deleteMode" />
+          <BadgeStatus label="Course" :status="s.status" />
         </TableCell>
         <td><Loader :loading="pending" /></td>
       </tr>
+      <template v-if="!classId" #fallback>Please select a class</template>
+      <template v-else #fallback>
+        <div>All students already in this course</div>
+        <div>or this class has no students yet.</div>
+      </template>
     </Table>
 
     <div class="flex flex-col md:flex-row gap-4 justify-end mt-4">
       <Pagination class="md:ml-0 ml-auto mr-auto" v-bind="resolveMeta(data.meta)" />
 
-      <div class="flex justify-center items-center gap-4">
-        <button class="btn btn-secondary" @click="handleReset">Refresh</button>
-        <button class="btn" :class="[deleteMode ? 'btn-accent' : 'btn-primary']" @click="handleEnroll">
-          <span v-if="deleteMode"> Unenroll </span>
-          <span v-else> Enroll </span>
-        </button>
-        <input type="checkbox" v-model="deleteMode" class="toggle toggle-accent" />
+      <div class="flex flex-wrap md:flex-nowrap justify-center items-center gap-4">
+        <SelectTeacher :class="[teacherError ? 'select-accent' : 'select-primary']" v-model="teacherId" />
+        <input type="checkbox" class="toggle toggle-accent md:order-first" />
+        <div class="flex justify-center gap-4">
+          <button class="btn btn-primary" @click="handleEnroll">Enroll</button>
+          <button class="btn btn-secondary" @click="handleReset">Refresh</button>
+        </div>
       </div>
     </div>
   </Main>
 </template>
+
+<style scoped></style>
