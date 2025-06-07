@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { Icon } from '@iconify/vue';
+
 definePageMeta({
   middleware: ['auth', 'load-class'],
 });
@@ -13,14 +15,14 @@ setBreadcrumb([
 ]);
 
 // !
-const deleteMode = ref(false);
-watch(deleteMode, v => {
+const inverse = ref(false);
+watch(inverse, v => {
   page.value = 1;
 });
 
 const page = useRouteQuery<number>('page', 1);
 const url = computed(() => {
-  if (deleteMode.value) {
+  if (inverse.value) {
     return `/classes/${$class.id}/students`;
   }
   return `/students/available`;
@@ -77,7 +79,7 @@ function handleEnroll() {
       student.status = 'enrolling';
 
       $fetch(`/classes/${$class.id}/students`, {
-        method: deleteMode.value ? 'DELETE' : 'POST',
+        method: inverse.value ? 'DELETE' : 'POST',
         body: { studentId: student.id },
         ...useFetchOption(),
       })
@@ -92,6 +94,8 @@ function handleEnroll() {
 }
 async function handleReset() {
   page.value = 1;
+  selecteds.value = [];
+  await refresh();
 }
 </script>
 
@@ -120,22 +124,39 @@ async function handleReset() {
           />
         </TableCell>
         <TableCell :loading="pending">
-          <BadgeStatus label="Class" :status="s.status" :inverse="deleteMode" />
+          <BadgeStatus label="Class" :status="s.status" :inverse="inverse" />
         </TableCell>
         <td><Loader :loading="pending" /></td>
       </tr>
     </Table>
 
     <div class="flex flex-col md:flex-row gap-4 justify-end mt-4">
-      <Pagination class="md:ml-0 ml-auto mr-auto" v-bind="resolveMeta(data.meta)" />
+      <div class="flex items-center gap-4 md:ml-0 ml-auto mr-auto">
+        <Pagination class="" v-bind="resolveMeta(data.meta)" />
 
-      <div class="flex justify-center items-center gap-4">
-        <button class="btn btn-secondary" @click="handleReset">Refresh</button>
-        <button class="btn" :class="[deleteMode ? 'btn-accent' : 'btn-primary']" @click="handleEnroll">
-          <span v-if="deleteMode"> Unenroll </span>
-          <span v-else> Enroll </span>
+        <button class="btn join-item font-bold btn-secondary btn-soft" @click="handleReset">
+          <div class="flex items-center gap-2">
+            <Icon icon="mingcute:refresh-3-fill" class="text-xl" />
+          </div>
         </button>
-        <input type="checkbox" v-model="deleteMode" class="toggle toggle-accent" />
+      </div>
+
+      <div class="flex flex-wrap md:flex-nowrap justify-center items-center gap-4">
+        <template v-if="!inverse">
+          <button class="btn btn-primary" @click="handleEnroll">Enroll</button>
+        </template>
+        <template v-else>
+          <button class="btn btn-accent" @click="handleEnroll">Unenroll</button>
+        </template>
+        <button
+          class="btn join-item font-bold"
+          :class="inverse ? 'btn-accent' : 'btn-primary'"
+          @click="inverse = !inverse"
+        >
+          <div class="flex items-center gap-2">
+            <Icon icon="mingcute:transfer-3-fill" class="text-xl" />
+          </div>
+        </button>
       </div>
     </div>
   </Main>

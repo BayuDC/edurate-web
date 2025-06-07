@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Icon } from '@iconify/vue';
+
 definePageMeta({
   middleware: ['auth', 'load-course'],
 });
@@ -8,6 +10,7 @@ const page = useRouteQuery<number>('page', 1);
 const classId = useRouteQuery<number>('class');
 const teacherId = ref('');
 const teacherError = computed(() => !teacherId.value && selecteds.value.length > 0);
+const inverse = ref(false);
 
 setBreadcrumb([
   { text: 'Admin', href: '/' },
@@ -101,7 +104,7 @@ async function handleReset() {
 <template>
   <Main title="Student Enrollment" disable-add-button>
     <template #menu>
-      <SelectClass />
+      <SelectClass class="w-full md:w-auto" />
     </template>
 
     <Table :columns="['Code', 'Name', 'Select', 'Status']">
@@ -138,16 +141,34 @@ async function handleReset() {
       </template>
     </Table>
 
-    <div class="flex flex-col md:flex-row gap-4 justify-end mt-4">
-      <Pagination class="md:ml-0 ml-auto mr-auto" v-bind="resolveMeta(data.meta)" />
+    <div v-if="classId" class="flex flex-col md:flex-row gap-4 justify-end mt-4">
+      <div class="flex items-center gap-4 md:ml-0 ml-auto mr-auto">
+        <Pagination class="" v-bind="resolveMeta(data.meta)" />
+
+        <button class="btn join-item font-bold btn-secondary btn-soft" @click="handleReset">
+          <div class="flex items-center gap-2">
+            <Icon icon="mingcute:refresh-3-fill" class="text-xl" />
+          </div>
+        </button>
+      </div>
 
       <div class="flex flex-wrap md:flex-nowrap justify-center items-center gap-4">
-        <SelectTeacher :class="[teacherError ? 'select-accent' : 'select-primary']" v-model="teacherId" />
-        <input type="checkbox" class="toggle toggle-accent md:order-first" />
-        <div class="flex justify-center gap-4">
+        <template v-if="!inverse">
+          <SelectTeacher :class="[teacherError ? 'select-accent' : 'select-primary']" v-model="teacherId" />
           <button class="btn btn-primary" @click="handleEnroll">Enroll</button>
-          <button class="btn btn-secondary" @click="handleReset">Refresh</button>
-        </div>
+        </template>
+        <template v-else>
+          <button class="btn btn-accent" @click="handleEnroll">Unenroll</button>
+        </template>
+        <button
+          class="btn join-item font-bold"
+          :class="inverse ? 'btn-accent' : 'btn-primary'"
+          @click="inverse = !inverse"
+        >
+          <div class="flex items-center gap-2">
+            <Icon icon="mingcute:transfer-3-fill" class="text-xl" />
+          </div>
+        </button>
       </div>
     </div>
   </Main>
