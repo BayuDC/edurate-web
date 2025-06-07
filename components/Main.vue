@@ -6,6 +6,7 @@ const props = defineProps<{
   title: string;
   simple?: boolean;
   disableAddButton?: boolean;
+  disableSearch?: boolean;
 }>();
 </script>
 
@@ -17,7 +18,7 @@ const props = defineProps<{
         <slot name="menu"></slot>
 
         <div class="flex gap-4 w-full">
-          <div class="join w-full">
+          <div class="join w-full" v-if="!disableSearch">
             <input class="input join-item" placeholder="Type here.." />
             <button class="btn join-item btn-secondary font-bold">
               <div class="flex items-center gap-2">

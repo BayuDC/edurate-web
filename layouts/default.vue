@@ -86,7 +86,7 @@ const breadcrumbs = useBreadcrumb();
                 <NuxtLink :to="menu.path">{{ menu.name }}</NuxtLink>
               </div>
             </li>
-            <li class="text-base font-semibold mb-3 text-base-content hover:text-primary">
+            <li class="text-base font-semibold mb-3 text-base-content hover:text-secondary">
               <div>
                 <Icon icon="mingcute:user-3-fill" class="text-2xl" />
                 <NuxtLink to="/profile">Profile</NuxtLink>
